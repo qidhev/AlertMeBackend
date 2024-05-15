@@ -1,0 +1,45 @@
+services:
+    nginx:
+        image: nginx:latest
+        volumes:
+            - .:/var/www
+            - ./_docker/nginx/conf.d/:/etc/nginx/conf.d
+            - ./_docker/nginx/logs:/var/log/nginx
+        ports:
+            - '${APP_PORT:-80}:80'
+        container_name: nginx
+        depends_on:
+            - app
+    app:
+        build:
+            context: .
+            dockerfile: _docker/app/Dockerfile
+        volumes:
+            - .:/var/www
+        depends_on:
+            - pgsql
+            - redis
+        container_name: app_main
+        command: ["/bin/sh", "-c", "chmod -R 777 /var/www/ && ./scripts/entrypoint.sh"]
+        env_file:
+            -   .env
+    pgsql:
+        image: 'postgres:15'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - ./_docker/pgsql:/var/lib/postgresql/data
+        container_name: pgsql
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - ./_docker/redis:/data
+        container_name: redis
+
