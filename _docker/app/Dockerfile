@@ -27,6 +27,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
     --filename=composer \
     --install-dir=/usr/local/bin
 
+# Install Node.js using NodeSource setup script
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs git
+
 WORKDIR /var/www
 
 RUN chmod -R 777 ./

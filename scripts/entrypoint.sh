@@ -1,6 +1,13 @@
 #!/bin/sh
 set -e # Завершение работы если команда вернула ошибку
 
+echo "Запуск composer"
+composer install
+
+echo "Запуск npm"
+npm install
+npm run build
+
 echo "Ожидание иницализации базы данных"
 
 while ! nc -z "$DB_HOST" $DB_PORT; do
