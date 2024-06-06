@@ -50,16 +50,6 @@ class NotificationController extends Controller
     {
         $data = $request->getData();
 
-        if (empty($data['type_name']) && empty($data['type_id'])) {
-            throw new \Exception("Не заполнена информация о тип уведомления");
-        }
-
-        if (!empty($data['type_name'])) {
-            $type = TypeNotification::create(['name' => $data['type_name']]);
-            $data['type_id'] = $type->id;
-            unset($data['type_name']);
-        }
-
         Notification::create($data);
 
         return to_route('notification.index');

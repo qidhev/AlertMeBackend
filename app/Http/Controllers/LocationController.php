@@ -35,7 +35,7 @@ class LocationController extends Controller
 
     public function store(LocationRequest $request, City $city)
     {
-        $data = (new GeocoderModule(
+        $coords = (new GeocoderModule(
             [
                 'address' => "{$city->name} {$request->input('street')} {$request->input('house')}"
             ]
@@ -44,8 +44,20 @@ class LocationController extends Controller
 
         DB::beginTransaction();
 
+        $data = $request->getData();
+
+        if (empty($data['type_name']) && empty($data['type_id'])) {
+            throw new \Exception("Не заполнена информация о тип уведомления");
+        }
+
+        if (!empty($data['type_name'])) {
+            $type = TypeLocation::create(['name' => $data['type_name']]);
+            $data['type_id'] = $type->id;
+            unset($data['type_name']);
+        }
+
         try {
-            $locationData = array_merge($request->getData(), $data);
+            $locationData = array_merge($data, $coords ?? []);
 
             $location = Location::create($locationData);
 

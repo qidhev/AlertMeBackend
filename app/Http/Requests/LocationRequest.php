@@ -56,7 +56,8 @@ class LocationRequest extends FormRequest
                     $fail("Данный адрес не существуют");
                 }
             }],
-            'type_id' => 'required|int',
+            'type_id' => 'nullable|int',
+            'type_name' => 'nullable|string|unique:locations_type,name',
             'city_id' => 'required|int',
         ];
     }
@@ -70,6 +71,7 @@ class LocationRequest extends FormRequest
             'street' => $this->validated('street'),
             'house' => $this->validated('house'),
             'type_id' => $this->validated('type_id'),
+            'type_name' => $this->validated('type_name'),
             'city_id' => $this->validated('city_id'),
         ];
     }

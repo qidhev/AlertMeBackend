@@ -28,7 +28,6 @@ class CreateNotification extends FormRequest
             'date_start_at' => 'required|date',
             'date_end_at' => 'required|date',
             'type_id' => 'required|int',
-            'type_name' => 'nullable|string',
             'city_id' => 'nullable|int',
             'parent_id' => 'nullable|int',
             'type_location_id' => 'nullable|int',
