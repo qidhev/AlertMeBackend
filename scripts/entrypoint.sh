@@ -8,16 +8,18 @@ echo "Запуск npm"
 npm install
 npm run build
 
-echo "Ожидание иницализации базы данных"
+if [ "$APP_ENV" != "production" ]; then
+    echo "Ожидание инициализации базы данных"
 
-while ! nc -z "$DB_HOST" $DB_PORT; do
-    sleep 1
-done
+    while ! nc -z "$DB_HOST" $DB_PORT; do
+        sleep 1
+    done
 
-echo "Запуск миграции"
-php artisan migrate
+    echo "Запуск миграции"
+    php artisan migrate
 
-echo "Запуск сидеров"
+    echo "Запуск сидеров"
+fi
 
 #php artisan db:seed MainSeeder
 
