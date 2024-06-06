@@ -13,7 +13,7 @@ class MqttModule
         try {
             $this->mqtt = new MQTTClient($host, $port, 'server');
         } catch (\Throwable $throwable) {
-            throw new \RuntimeException("Не удалось инициализировать к серверу mqtt", 0, $throwable);
+            throw new \RuntimeException("Не удалось инициализировать к серверу mqtt -> $throwable", 0, $throwable);
         }
     }
 

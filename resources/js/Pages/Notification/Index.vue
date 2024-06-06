@@ -7,7 +7,7 @@ import {
 import PrimaryButton       from "@/Components/PrimaryButton.vue";
 import SecondaryButton     from "@/Components/SecondaryButton.vue";
 
-defineProps({
+const props = defineProps({
     notifications: {
         type: Array,
     },
@@ -22,8 +22,14 @@ defineProps({
     }
 });
 
-const send = () => {
+const getLocationType = (id) => {
+    const type = props.typesLocation.find(type => type.id === id);
 
+    if (type) {
+        return ` : ${type.name}`
+    }
+
+    return "";
 }
 </script>
 
@@ -43,7 +49,7 @@ const send = () => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-6">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-5 flex items-center justify-between" v-for="notify in notifications" :key="notify.id">
                     <div>
-                        <div class="mb-2 text-sm text-sky-500">{{types.find(type => type.id === notify.type_id).name}}</div>
+                        <div class="mb-2 text-sm text-sky-500">{{types.find(type => type.id === notify.type_id).name}} {{getLocationType(notify.type_location_id)}}</div>
                         <div class="mb-3">
                             <span class="font-bold">{{notify.title}}</span>
                             {{notify.city_id ? `: ${cities.find(city => city.id === notify.city_id).name}` : ''}}

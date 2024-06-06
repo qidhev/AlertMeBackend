@@ -1,10 +1,12 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {
-    Head
+    Head,
+    router
 }                          from '@inertiajs/vue3';
 import PrimaryButton       from "@/Components/PrimaryButton.vue";
 import SecondaryButton     from "@/Components/SecondaryButton.vue";
+import DangerButton        from "@/Components/DangerButton.vue";
 
 defineProps({
     city: {
@@ -46,8 +48,12 @@ defineProps({
                             <span v-if="location.email">/ {{location.email}}</span>
                         </div>
                     </div>
-                    <div>
-                        <SecondaryButton>Открыть</SecondaryButton>
+                    <div class="flex flex-row gap-4">
+                        <SecondaryButton @click="() => { $inertia.visit(`/cities/${city.id}/locations/${location.id}/edit`) }">Изменить</SecondaryButton>
+                        <form @submit.prevent="router.delete(`/cities/${city.id}/locations/${location.id}`)">
+                            <DangerButton>Удалить</DangerButton>
+                        </form>
+
                     </div>
                 </div>
             </div>

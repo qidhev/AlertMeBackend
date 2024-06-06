@@ -26,7 +26,7 @@ class NotificationController extends Controller
         return Inertia::render('Notification/Index', [
             'notifications' => Notification::all(),
             'cities' => City::all(),
-            'types' => TypeNotification::all(),
+            'types' => TypeNotification::whereNull('slug')->get(),
             'typesLocation' => TypeLocation::all()
         ]);
     }
@@ -38,7 +38,7 @@ class NotificationController extends Controller
     {
         return Inertia::render('Notification/Create', [
             'cities' => City::all(),
-            'types' => TypeNotification::all(),
+            'types' => TypeNotification::whereNull('slug')->get(),
             'typesLocation' => TypeLocation::all()
         ]);
     }
@@ -68,6 +68,7 @@ class NotificationController extends Controller
     public function sendNotification(Request $request)
     {
         $notification = Notification::find($request->integer('id'));
+        $notification->type;
 
         if ($notification->send) {
             throw new \Exception('Данное уведомление уже было отправлено');
@@ -77,14 +78,14 @@ class NotificationController extends Controller
 
         $message = [
             'notification' => $notification,
-            'history' => $notification->parent_id ? $notification->history() : []
+            'type' => 'notification'
         ];
 
         $notificationSend = $notification->send;
         $notificationSendAt = $notification->sent_at;
 
         try {
-            $notification->send = true;
+//            $notification->send = true;
             $notification->sent_at = new \DateTime();
             $notification->save();
 

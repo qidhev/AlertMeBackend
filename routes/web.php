@@ -29,21 +29,24 @@ Route::get('/', function () {
     }
 });
 
-Route::group(['middleware' => ['auth', 'verified']], function () {
+Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard', [
-            'lastNotification' => Notification::where('send', true)->latest()->first()
+            'lastNotification' => Notification::where('send', true)->orderBy('updated_at', 'DESC')->first()
         ]);
     })->name('dashboard');
 
     Route::resource('notification', NotificationController::class)->except(['edit']);
     Route::post('send-notification', [NotificationController::class, 'sendNotification']);
+    Route::resource('cities', CityController::class)->only(['index', 'create', 'store']);
 
     Route::prefix('cities')->group(function() {
-        Route::get('', [CityController::class, 'index'])->name('city');
-        Route::get('{city}/locations', [LocationController::class, 'index'])->name('locations');
-        Route::get('{city}/locations/create', [LocationController::class, 'create']);
-        Route::post('{city}/locations', [LocationController::class, 'store']);
+        Route::get('{city}/locations', [LocationController::class, 'index'])->name('locations.index');
+        Route::get('{city}/locations/create', [LocationController::class, 'create'])->name('locations.create');
+        Route::post('{city}/locations', [LocationController::class, 'store'])->name('locations.store');
+        Route::get('{city}/locations/{location}/edit', [LocationController::class, 'edit'])->name('locations.edit');
+        Route::put('{city}/locations/{location}', [LocationController::class, 'update'])->name('locations.update');
+        Route::delete('{city}/locations/{location}', [LocationController::class, 'destroy'])->name('locations.destroy');
     });
 });
 

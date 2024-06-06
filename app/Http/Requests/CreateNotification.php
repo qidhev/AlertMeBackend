@@ -22,13 +22,12 @@ class CreateNotification extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => 'required|max:120',
             'subtitle' => 'required|max:120',
             'title' => 'required|max:120',
             'main_text' => 'required',
             'date_start_at' => 'required|date',
             'date_end_at' => 'required|date',
-            'type_id' => 'nullable|int',
+            'type_id' => 'required|int',
             'type_name' => 'nullable|string',
             'city_id' => 'nullable|int',
             'parent_id' => 'nullable|int',
@@ -39,7 +38,7 @@ class CreateNotification extends FormRequest
     public function getData(): array
     {
         return [
-            'message' => $this->validated('message'),
+            'message' => 'message',
             'subtitle' => $this->validated('subtitle'),
             'title' => $this->validated('title'),
             'main_text' => $this->validated('main_text'),

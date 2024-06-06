@@ -16,6 +16,34 @@ class GeocoderModule
         $this->address = $data['address'] ?? null;
     }
 
+    public function getCityByData()
+    {
+        if (empty($this->latitude) && empty($this->longitude) && empty($this->address))
+            throw new \Exception("Нет данных для получения города");
+
+        if (empty($this->address) && (empty($this->latitude) || empty($this->longitude)))
+            throw new \Exception("Нет данных для получения города по координатам");
+
+        $client = new Client();
+        $response = $client->get('https://geocode-maps.yandex.ru/1.x/', [
+            'query' => [
+                'apikey' => env('YANDEX_MAP_API'),
+                'geocode' => $this->address ?? "$this->longitude,$this->latitude",
+                'kind' => 'locality',
+                'format' => 'json',
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        if (!empty($data['response']['GeoObjectCollection']['featureMember'])) {
+            $geoObject = $data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject'];
+
+            return $geoObject['name'];
+        }
+
+        return null;
+    }
+
     public function getCoordinateByAddress(): ?array
     {
         if (empty($this->address))

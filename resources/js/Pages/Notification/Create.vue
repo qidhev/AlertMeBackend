@@ -2,16 +2,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {
     Head,
-    router
+    useForm
 }                          from '@inertiajs/vue3';
 import PrimaryButton       from "@/Components/PrimaryButton.vue";
 import TextInput           from "@/Components/TextInput.vue";
 import InputLabel          from "@/Components/InputLabel.vue";
-import {
-    reactive,
-    ref
-}                          from "vue";
-import SecondaryButton     from "@/Components/SecondaryButton.vue";
+import {ref}               from "vue";
 
 defineProps({
     types: {
@@ -27,8 +23,7 @@ defineProps({
 
 const createType = ref(false);
 
-const notify = reactive({
-    message: '',
+const notify = useForm({
     title: '',
     subtitle: '',
     main_text: '',
@@ -42,7 +37,7 @@ const notify = reactive({
 });
 
 const createNotify = () => {
-    router.post('/notification', notify)
+    notify.post('/notification', notify)
 }
 
 </script>
@@ -63,44 +58,46 @@ const createNotify = () => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg flex justify-between mb-5">
                     <div class="p-6 flex flex-col gap-6">
-                        <div class="flex flex-col w-96">
-                            <InputLabel>Внутренее сообщение</InputLabel>
-                            <TextInput v-model="notify.message"></TextInput>
-                        </div>
 
                         <div class="flex flex-col w-96">
-                            <InputLabel>Заголовок</InputLabel>
+                            <InputLabel>Заголовок *</InputLabel>
                             <TextInput v-model="notify.title"></TextInput>
+                            <small v-if="notify.errors.title">Заголовок обязателен к заполнению</small>
                         </div>
 
                         <div class="flex flex-col w-96">
-                            <InputLabel>Подзаголовок</InputLabel>
+                            <InputLabel>Подзаголовок *</InputLabel>
                             <TextInput v-model="notify.subtitle"></TextInput>
+                            <small v-if="notify.errors.subtitle">Подзаголовок обязателен к заполнению</small>
                         </div>
 
                         <div class="flex flex-col w-96">
-                            <InputLabel>Основной текст</InputLabel>
+                            <InputLabel>Основной текст *</InputLabel>
                             <textarea
                                 v-model="notify.main_text"
                                 class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"></textarea>
+                            <small v-if="notify.errors.main_text">Основной текст обязателен к заполнению</small>
                         </div>
                     </div>
                     <div class="p-6 flex flex-col gap-6">
                         <div class="flex flex-col w-96">
-                            <InputLabel>Начало события</InputLabel>
+                            <InputLabel>Начало события *</InputLabel>
                             <TextInput type="datetime-local" v-model="notify.date_start_at"></TextInput>
+                            <small v-if="notify.errors.date_start_at">Начало обязателено к заполнению</small>
                         </div>
 
                         <div class="flex flex-col w-96">
-                            <InputLabel>Конец события</InputLabel>
+                            <InputLabel>Конец события *</InputLabel>
                             <TextInput type="datetime-local" v-model="notify.date_end_at"></TextInput>
+                            <small v-if="notify.errors.date_end_at">Конец обязателен к заполнению</small>
                         </div>
 
                         <div class="flex flex-col w-96">
-                            <InputLabel>Тип уведомления</InputLabel>
+                            <InputLabel>Тип уведомления *</InputLabel>
                             <select class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" v-model="notify.type_id">
                                 <option v-for="type in types" :value="type.id" :key="type.id">{{type.name}}</option>
                             </select>
+                            <small v-if="notify.errors.type_id">Тип обязателен к заполнению</small>
                         </div>
 
                         <div class="flex flex-col w-96">

@@ -20,7 +20,7 @@ defineProps({
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">Города</h2>
-                <PrimaryButton @click="() => { $inertia.visit('/city/create') }">Добавление города</PrimaryButton>
+                <PrimaryButton @click="() => { $inertia.visit('/cities/create') }">Добавление города</PrimaryButton>
             </div>
 
         </template>

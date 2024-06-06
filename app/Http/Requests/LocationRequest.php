@@ -26,7 +26,6 @@ class LocationRequest extends FormRequest
             'name' => 'required|string',
             'email' => 'nullable|email',
             'phone' => 'required|string',
-            'city' => 'required|string',
             'street' => ['nullable', function ($attribute, $value, $fail) {
                 if (empty($this->input('street')) && empty($this->input('house'))) {
                     return;
@@ -59,6 +58,19 @@ class LocationRequest extends FormRequest
             }],
             'type_id' => 'required|int',
             'city_id' => 'required|int',
+        ];
+    }
+
+    public function getData(): array
+    {
+        return [
+            'name' => $this->validated('name'),
+            'email' => $this->validated('email'),
+            'phone' => $this->validated('phone'),
+            'street' => $this->validated('street'),
+            'house' => $this->validated('house'),
+            'type_id' => $this->validated('type_id'),
+            'city_id' => $this->validated('city_id'),
         ];
     }
 }

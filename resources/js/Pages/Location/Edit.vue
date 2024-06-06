@@ -14,34 +14,33 @@ const props = defineProps({
     city: {
         type: Object
     },
+    location: {
+        type: Object
+    },
     types: {
         type: Array
     }
 })
 
-const location = useForm({
-    name: '',
-    email: '',
-    phone: '',
-    street: '',
-    house: '',
-    type_id: props.types[0].id,
-    city_id: props.city.id ?? null
+const locationEdit = useForm({
+    name: props.location.name,
+    email: props.location.email,
+    phone: props.location.phone,
+    street: props.location.street,
+    house: props.location.house,
+    type_id: props.location.type_id,
+    city_id: props.city.id
 })
-
-const createLocation = () => {
-    router.post(`/cities/${props.city.id}/locations`, location)
-}
 
 </script>
 
 <template>
-    <Head title="Cоздание уведомления" />
+    <Head title="Изменение уведомления" />
 
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Создание локации</h2>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Изменение локации</h2>
                 <PrimaryButton @click="() => { $inertia.visit(`/cities/${city.id}/locations`) }">Назад</PrimaryButton>
             </div>
 
@@ -52,30 +51,30 @@ const createLocation = () => {
                     <div class="p-6 flex flex-col gap-6">
                         <div class="flex flex-col w-96">
                             <InputLabel>Наименование *</InputLabel>
-                            <TextInput v-model="location.name" @input="location.clearErrors('name')"></TextInput>
-                            <small v-if="location.errors.name">Имя обязательно к заполнению</small>
+                            <TextInput v-model="locationEdit.name" @input="locationEdit.clearErrors('name')"></TextInput>
+                            <small v-if="locationEdit.errors.name">Имя обязательно к заполнению</small>
                         </div>
 
                         <div class="flex flex-col w-96">
                             <InputLabel>Email</InputLabel>
-                            <TextInput v-model="location.email"></TextInput>
+                            <TextInput v-model="locationEdit.email"></TextInput>
                         </div>
 
                         <div class="flex flex-col w-96">
                             <InputLabel>Телефон *</InputLabel>
-                            <TextInput v-model="location.phone" @input="location.clearErrors('phone')"></TextInput>
-                            <small v-if="location.errors.phone">Телефон обязателен к заполнению</small>
+                            <TextInput v-model="locationEdit.phone" @input="locationEdit.clearErrors('phone')"></TextInput>
+                            <small v-if="locationEdit.errors.phone">Телефон обязателен к заполнению</small>
                         </div>
                         <div class="flex flex-col w-96">
                             <InputLabel>Тип локации*</InputLabel>
-                            <select class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" v-model="location.type_id">
+                            <select class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" v-model="locationEdit.type_id">
                                 <option v-for="type in types" :value="type.id" :key="type.id">{{type.name}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="p-6 flex flex-col gap-6">
                         <InputLabel>Адрес локации</InputLabel>
-                        <small v-if="location.errors.street || location.errors.house">{{location.errors.street}}</small>
+                        <small v-if="locationEdit.errors.street || locationEdit.errors.house">{{locationEdit.errors.street}}</small>
                         <div class="flex flex-col w-96">
                             <InputLabel>Город</InputLabel>
                             <TextInput :disabled="true" v-model="city.name"></TextInput>
@@ -83,18 +82,18 @@ const createLocation = () => {
 
                         <div class="flex flex-col w-96">
                             <InputLabel>Улица</InputLabel>
-                            <TextInput @input="location.clearErrors('street')" v-model="location.street"></TextInput>
+                            <TextInput @input="locationEdit.clearErrors('street')" v-model="locationEdit.street"></TextInput>
                         </div>
 
                         <div class="flex flex-col w-96">
                             <InputLabel>Дом</InputLabel>
-                            <TextInput @input="location.clearErrors('street')" v-model="location.house"></TextInput>
+                            <TextInput @input="locationEdit.clearErrors('street')" v-model="locationEdit.house"></TextInput>
                         </div>
                     </div>
 
                 </div>
-                <form @submit.prevent="location.post(`/cities/${city.id}/locations`)">
-                    <PrimaryButton>Создать локацию</PrimaryButton>
+                <form @submit.prevent="locationEdit.put(`/cities/${city.id}/locations/${location.id}`)">
+                    <PrimaryButton>Изменить локацию</PrimaryButton>
                 </form>
             </div>
         </div>
