@@ -29,7 +29,7 @@ const location = useForm({
     phone: '',
     street: '',
     house: '',
-    type_id: props.types[0].id,
+    type_id: props.types.length ? props.types[0].id : null,
     type_name: '',
     city_id: props.city.id ?? null
 })
