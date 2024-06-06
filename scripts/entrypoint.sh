@@ -21,4 +21,6 @@ echo "Запуск сидеров"
 
 #php artisan db:seed MainSeeder
 
-exec php-fpm # Прододжение работы контейнера через php-fpm
+#exec php-fpm # Прододжение работы контейнера через php-fpm
+
+php artisan serve --port=8080 --host=0.0.0.0
