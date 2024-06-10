@@ -19,9 +19,8 @@ if [ "$APP_ENV" != "production" ]; then
     php artisan migrate
 
     echo "Запуск сидеров"
+    php artisan db:seed DatabaseSeeder
 fi
-
-#php artisan db:seed MainSeeder
 
 #exec php-fpm # Прододжение работы контейнера через php-fpm
 
